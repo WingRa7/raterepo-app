@@ -1,3 +1,5 @@
-Git Repo Rating App
+### Git Repo Rating App
 
-Study application for Full Stack Open Course (Helsinki Unversity) Part 10: React Native
+A mobile application application to rate Github repos
+
+A study application as part of the Full Stack Open Course (Helsinki Unversity) Part 10: React Native
