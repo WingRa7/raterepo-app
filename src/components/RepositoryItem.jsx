@@ -5,8 +5,7 @@ import Badge from "./Badge";
 
 const styles = StyleSheet.create({
   repoContainer: {
-    padding: 5,
-    margin: 5,
+    backgroundColor: theme.colors.cardBackground,
   },
   infoContainer: {
     flexDirection: "row",
