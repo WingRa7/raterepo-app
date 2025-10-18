@@ -4,7 +4,7 @@ import Text from "./Text";
 
 const styles = StyleSheet.create({
   badge: {
-    backgroundColor: theme.colors.blue,
+    backgroundColor: theme.colors.primary,
     borderRadius: 5,
     padding: 5,
     alignSelf: "flex-start",
