@@ -7,6 +7,7 @@ const theme = {
     cardBackground: "#ffffff",
     appBarBackground: "#24292e",
     border: "#999999",
+    error: "#d73a4a",
   },
   fontSizes: {
     body: 14,
