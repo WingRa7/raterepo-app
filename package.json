@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.7.14",
+    "dotenv": "^17.2.3",
     "expo": "~51.0.14",
     "expo-status-bar": "~1.12.1",
     "formik": "^2.4.6",
