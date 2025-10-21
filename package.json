@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "3.7.14",
+    "@react-native-async-storage/async-storage": "1.23.1",
     "dotenv": "^17.2.3",
     "expo": "~51.0.14",
     "expo-status-bar": "~1.12.1",

@@ -4,6 +4,7 @@ import theme from "../theme";
 import Text from "./Text";
 import Button from "./Button";
 import * as yup from "yup";
+import useSignIn from "../hooks/useSignIn";
 
 const styles = StyleSheet.create({
   signinContainer: {
@@ -94,8 +95,17 @@ const SignInForm = ({ onSubmit }) => {
 };
 
 const SignIn = () => {
-  const onSubmit = (values) => {
-    console.log(values);
+  const [signIn] = useSignIn();
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    try {
+      const { data } = await signIn({ username, password });
+      console.log("login data:", data);
+    } catch (e) {
+      console.log("login error:", e);
+    }
   };
 
   return <SignInForm onSubmit={onSubmit} />;

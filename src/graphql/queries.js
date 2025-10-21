@@ -13,3 +13,15 @@ export const GET_REPOSITORIES = gql`
   }
   ${REPO_INFO}
 `;
+
+export const GET_USERS = gql`
+  query GetUsers {
+    users {
+      edges {
+        node {
+          username
+        }
+      }
+    }
+  }
+`;
