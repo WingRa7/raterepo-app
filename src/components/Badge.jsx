@@ -14,7 +14,9 @@ const styles = StyleSheet.create({
 const Badge = ({ text }) => {
   return (
     <View style={styles.badge}>
-      <Text color="textSecondary">{text}</Text>
+      <Text testID="language" color="textSecondary">
+        {text}
+      </Text>
     </View>
   );
 };

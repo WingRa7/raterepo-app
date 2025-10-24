@@ -15,13 +15,13 @@ const styles = StyleSheet.create({
 
 const AppBarTab = ({ title }) => {
   return (
-    <View style={styles.container}>
-      <Pressable>
+    <>
+      <View style={styles.container}>
         <Text color="textSecondary" fontSize="subheading" fontWeight="bold">
           {title}
         </Text>
-      </Pressable>
-    </View>
+      </View>
+    </>
   );
 };
 

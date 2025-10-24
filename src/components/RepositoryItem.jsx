@@ -50,36 +50,48 @@ const RepositoryItem = ({
   ownerAvatarUrl,
 }) => {
   return (
-    <View style={styles.repoContainer}>
+    <View style={styles.repoContainer} testID="repositoryItem">
       <View style={styles.infoContainer}>
-        <Image style={styles.avatar} src={ownerAvatarUrl} />
+        <Image
+          style={styles.avatar}
+          src={ownerAvatarUrl}
+          testID="avatarImage"
+        />
         <View style={styles.infoText}>
-          <Text fontSize="subheading" fontWeight="bold">
+          <Text fontSize="subheading" fontWeight="bold" testID="fullName">
             {fullName}
           </Text>
-          <Text>{description} </Text>
+          <Text testID="description">{description} </Text>
           <Badge text={language} />
         </View>
       </View>
 
       <View style={styles.statsContainer}>
         <View style={styles.stat}>
-          <Text fontWeight="bold">{stargazersCount}</Text>
+          <Text fontWeight="bold" testID="stargazersCount">
+            {stargazersCount}
+          </Text>
           <Text>Stars</Text>
         </View>
 
         <View style={styles.stat}>
-          <Text fontWeight="bold">{forksCount}</Text>
+          <Text fontWeight="bold" testID="forksCount">
+            {forksCount}
+          </Text>
           <Text>Forks</Text>
         </View>
 
         <View style={styles.stat}>
-          <Text fontWeight="bold">{reviewCount}</Text>
+          <Text fontWeight="bold" testID="reviewCount">
+            {reviewCount}
+          </Text>
           <Text>Reviews</Text>
         </View>
 
         <View style={styles.stat}>
-          <Text fontWeight="bold">{ratingAverage}</Text>
+          <Text fontWeight="bold" testID="ratingAverage">
+            {ratingAverage}
+          </Text>
           <Text>Rating</Text>
         </View>
       </View>
