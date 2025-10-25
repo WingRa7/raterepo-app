@@ -2,13 +2,9 @@ import {
   RepositoryListContainer,
   formatNumber,
 } from "../../components/RepositoryList";
-import {
-  render,
-  fireEvent,
-  screen,
-  within,
-} from "@testing-library/react-native";
-import { expect, jest, test } from "@jest/globals";
+import { render, screen, within } from "@testing-library/react-native";
+import { expect } from "@jest/globals";
+import { NativeRouter } from "react-router-native";
 
 describe("RepositoryList", () => {
   describe("RepositoryListContainer", () => {
@@ -56,7 +52,11 @@ describe("RepositoryList", () => {
         ],
       };
 
-      render(<RepositoryListContainer repositories={repositories} />);
+      render(
+        <NativeRouter>
+          <RepositoryListContainer repositories={repositories} />
+        </NativeRouter>
+      );
 
       const repositoryItems = screen.getAllByTestId("repositoryItem");
       const [firstRepositoryItem, secondRepositoryItem] = repositoryItems;

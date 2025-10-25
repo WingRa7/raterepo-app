@@ -1,6 +1,8 @@
-import { FlatList, View, StyleSheet } from "react-native";
+import { FlatList, View, StyleSheet, Pressable } from "react-native";
+import { useNavigate } from "react-router-native";
 import useRepositories from "../hooks/useRepositories";
 import RepositoryItem from "./RepositoryItem";
+import { formatNumber } from "../utils/utils";
 
 const styles = StyleSheet.create({
   separator: {
@@ -10,19 +12,9 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const formatNumber = (number) => {
-  if (number < 1e3) {
-    return number.toString();
-  } else if (number < 1e6) {
-    return Math.floor(number / 1e2) / 10 + "K";
-  } else if (number < 1e9) {
-    return Math.floor(number / 1e5) / 10 + "M";
-  } else {
-    return Math.floor(number / 1e8) / 10 + "B";
-  }
-};
-
 export const RepositoryListContainer = ({ repositories }) => {
+  const navigate = useNavigate();
+
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
@@ -32,16 +24,18 @@ export const RepositoryListContainer = ({ repositories }) => {
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => (
-        <RepositoryItem
-          fullName={item.fullName}
-          description={item.description}
-          language={item.language}
-          forksCount={formatNumber(item.forksCount)}
-          stargazersCount={formatNumber(item.stargazersCount)}
-          ratingAverage={item.ratingAverage}
-          reviewCount={formatNumber(item.reviewCount)}
-          ownerAvatarUrl={item.ownerAvatarUrl}
-        />
+        <Pressable onPress={() => navigate(`/${item.id}`)}>
+          <RepositoryItem
+            fullName={item.fullName}
+            description={item.description}
+            language={item.language}
+            forksCount={formatNumber(item.forksCount)}
+            stargazersCount={formatNumber(item.stargazersCount)}
+            ratingAverage={item.ratingAverage}
+            reviewCount={formatNumber(item.reviewCount)}
+            ownerAvatarUrl={item.ownerAvatarUrl}
+          />
+        </Pressable>
       )}
     />
   );

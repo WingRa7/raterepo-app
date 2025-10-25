@@ -97,12 +97,12 @@ export const SignInFormContainer = ({ onSubmit }) => {
   );
 };
 
-const SignInForm = () => {
+const SignInForm = ({ onSubmit }) => {
   return <SignInFormContainer onSubmit={onSubmit} />;
 };
 
 const SignIn = () => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [signIn] = useSignIn();
 
