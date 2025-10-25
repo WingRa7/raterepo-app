@@ -9,30 +9,34 @@ import * as Linking from "expo-linking";
 import { formatNumber } from "../utils/utils";
 
 const styles = StyleSheet.create({
+  separator: {
+    height: 10,
+  },
   repoContainer: {
     backgroundColor: theme.colors.cardBackground,
   },
   infoContainer: {
+    display: "flex",
     flexDirection: "row",
   },
   infoText: {
     padding: 5,
-    margin: 5,
-    gap: 10,
+    marginTop: 10,
+    gap: 8,
+    maxWidth: 300,
   },
   avatar: {
-    width: 45,
-    height: 45,
+    width: 50,
+    height: 50,
     padding: 10,
-    margin: 10,
+    margin: 20,
     borderRadius: 5,
   },
   statsContainer: {
-    padding: 2,
-    margin: 2,
+    padding: 5,
     display: "flex",
     flexDirection: "row",
-    gap: 5,
+    gap: 20,
     justifyContent: "center",
   },
   stat: {
@@ -41,6 +45,23 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     gap: 5,
+  },
+  circle: {
+    marginTop: 20,
+    marginHorizontal: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+  },
+  reviewText: {
+    paddingVertical: 10,
+    marginVertical: 10,
+    gap: 5,
+    maxWidth: 300,
   },
 });
 
@@ -64,65 +85,104 @@ const RepositoryView = () => {
     );
   }
 
+  const ItemSeparator = () => <View style={styles.separator} />;
+
   const handleGithubButton = () => {
     Linking.openURL(repository.url);
   };
 
   const RepoInfo = () => {
     return (
-      <View style={styles.repoContainer} testID="repositoryItem">
-        <View style={styles.infoContainer}>
-          <Image
-            style={styles.avatar}
-            src={repository.ownerAvatarUrl}
-            testID="avatarImage"
-          />
-          <View style={styles.infoText}>
-            <Text fontSize="subheading" fontWeight="bold" testID="fullName">
-              {repository.fullName}
-            </Text>
-            <Text testID="description">{repository.description} </Text>
-            <Badge text={repository.language} />
+      <>
+        <View style={styles.repoContainer} testID="repositoryItem">
+          <View style={styles.infoContainer}>
+            <Image
+              style={styles.avatar}
+              src={repository.ownerAvatarUrl}
+              testID="avatarImage"
+            />
+            <View style={styles.infoText}>
+              <Text fontSize="subheading" fontWeight="bold" testID="fullName">
+                {repository.fullName}
+              </Text>
+              <Text testID="description" color="textPrimaryOpacity">
+                {repository.description}{" "}
+              </Text>
+              <Badge text={repository.language} />
+            </View>
           </View>
+
+          <View style={styles.statsContainer}>
+            <View style={styles.stat}>
+              <Text fontWeight="bold" testID="stargazersCount">
+                {formatNumber(repository.stargazersCount)}
+              </Text>
+              <Text color="textPrimaryOpacity">Stars</Text>
+            </View>
+
+            <View style={styles.stat}>
+              <Text fontWeight="bold" testID="forksCount">
+                {formatNumber(repository.forksCount)}
+              </Text>
+              <Text color="textPrimaryOpacity">Forks</Text>
+            </View>
+
+            <View style={styles.stat}>
+              <Text fontWeight="bold" testID="reviewCount">
+                {formatNumber(repository.reviewCount)}
+              </Text>
+              <Text color="textPrimaryOpacity">Reviews</Text>
+            </View>
+
+            <View style={styles.stat}>
+              <Text fontWeight="bold" testID="ratingAverage">
+                {repository.ratingAverage}
+              </Text>
+              <Text color="textPrimaryOpacity">Rating</Text>
+            </View>
+          </View>
+          <Pressable onPress={handleGithubButton}>
+            <Button title="Open in Github" />
+          </Pressable>
         </View>
-
-        <View style={styles.statsContainer}>
-          <View style={styles.stat}>
-            <Text fontWeight="bold" testID="stargazersCount">
-              {formatNumber(repository.stargazersCount)}
-            </Text>
-            <Text>Stars</Text>
-          </View>
-
-          <View style={styles.stat}>
-            <Text fontWeight="bold" testID="forksCount">
-              {formatNumber(repository.forksCount)}
-            </Text>
-            <Text>Forks</Text>
-          </View>
-
-          <View style={styles.stat}>
-            <Text fontWeight="bold" testID="reviewCount">
-              {formatNumber(repository.reviewCount)}
-            </Text>
-            <Text>Reviews</Text>
-          </View>
-
-          <View style={styles.stat}>
-            <Text fontWeight="bold" testID="ratingAverage">
-              {repository.ratingAverage}
-            </Text>
-            <Text>Rating</Text>
-          </View>
-        </View>
-        <Pressable onPress={handleGithubButton}>
-          <Button title="Open in Github" />
-        </Pressable>
-      </View>
+        <ItemSeparator />
+      </>
     );
   };
 
-  return <FlatList ListHeaderComponent={RepoInfo}></FlatList>;
+  const reviewNodes = repository
+    ? repository.reviews.edges.map((edge) => edge.node)
+    : [];
+
+  return (
+    <FlatList
+      data={reviewNodes}
+      ItemSeparatorComponent={ItemSeparator}
+      ListHeaderComponent={RepoInfo}
+      renderItem={({ item }) => (
+        <View style={styles.repoContainer}>
+          <View style={styles.infoContainer}>
+            <View style={styles.circle}>
+              <Text fontWeight="bold" color="primary">
+                {item.rating}
+              </Text>
+            </View>
+            <View style={styles.reviewText}>
+              <Text fontSize="subheading" fontWeight="bold">
+                {item.user.username}
+              </Text>
+              <Text color="textPrimaryOpacity">
+                {new Intl.DateTimeFormat("en-GB").format(
+                  new Date(item.createdAt)
+                )}
+              </Text>
+              <Text>{item.text}</Text>
+            </View>
+          </View>
+        </View>
+      )}
+    ></FlatList>
+  );
 };
 
 export default RepositoryView;

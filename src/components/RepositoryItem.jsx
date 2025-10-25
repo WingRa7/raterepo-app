@@ -8,26 +8,27 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.cardBackground,
   },
   infoContainer: {
+    display: "flex",
     flexDirection: "row",
   },
   infoText: {
     padding: 5,
-    margin: 5,
-    gap: 10,
+    marginTop: 10,
+    gap: 8,
+    maxWidth: 300,
   },
   avatar: {
-    width: 45,
-    height: 45,
+    width: 50,
+    height: 50,
     padding: 10,
-    margin: 10,
+    margin: 20,
     borderRadius: 5,
   },
   statsContainer: {
-    padding: 2,
-    margin: 2,
+    padding: 5,
     display: "flex",
     flexDirection: "row",
-    gap: 5,
+    gap: 20,
     justifyContent: "center",
   },
   stat: {
@@ -61,7 +62,9 @@ const RepositoryItem = ({
           <Text fontSize="subheading" fontWeight="bold" testID="fullName">
             {fullName}
           </Text>
-          <Text testID="description">{description} </Text>
+          <Text testID="description" color="textPrimaryOpacity">
+            {description}{" "}
+          </Text>
           <Badge text={language} />
         </View>
       </View>
@@ -71,28 +74,28 @@ const RepositoryItem = ({
           <Text fontWeight="bold" testID="stargazersCount">
             {stargazersCount}
           </Text>
-          <Text>Stars</Text>
+          <Text color="textPrimaryOpacity">Stars</Text>
         </View>
 
         <View style={styles.stat}>
           <Text fontWeight="bold" testID="forksCount">
             {forksCount}
           </Text>
-          <Text>Forks</Text>
+          <Text color="textPrimaryOpacity">Forks</Text>
         </View>
 
         <View style={styles.stat}>
           <Text fontWeight="bold" testID="reviewCount">
             {reviewCount}
           </Text>
-          <Text>Reviews</Text>
+          <Text color="textPrimaryOpacity">Reviews</Text>
         </View>
 
         <View style={styles.stat}>
           <Text fontWeight="bold" testID="ratingAverage">
             {ratingAverage}
           </Text>
-          <Text>Rating</Text>
+          <Text color="textPrimaryOpacity">Rating</Text>
         </View>
       </View>
     </View>
