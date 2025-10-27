@@ -27,10 +27,8 @@ const AppBar = () => {
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
-  // can abstract signout function into useSignOut.js hook
 
   const handleSignOut = async () => {
-    console.log("signed out");
     await authStorage.removeAccessToken();
     await apolloClient.resetStore();
   };
@@ -45,6 +43,11 @@ const AppBar = () => {
         <Link to="/">
           <AppBarTab title={"Repositories"} />
         </Link>
+        {data.me && data && (
+          <Link to="/review">
+            <AppBarTab title={"Create a review"} />
+          </Link>
+        )}
         {!data.me && data && (
           <Link to="/signin">
             <AppBarTab title={"Sign In"} />
