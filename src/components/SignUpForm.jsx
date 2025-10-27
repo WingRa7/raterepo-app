@@ -4,13 +4,14 @@ import theme from "../theme";
 import Text from "./Text";
 import Button from "./Button";
 import * as yup from "yup";
-import useSignIn from "../hooks/useSignIn";
+
 import { useNavigate } from "react-router-native";
+import useCreateUser from "../hooks/useCreateUser";
+import useSignIn from "../hooks/useSignIn";
 
 const styles = StyleSheet.create({
   signinContainer: {
     backgroundColor: theme.colors.cardBackground,
-    flexDirection: "column",
   },
   inputItems: {
     padding: 10,
@@ -21,7 +22,6 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   input: {
-    height: 40,
     borderWidth: 1,
     borderRadius: 5,
     borderColor: theme.colors.border,
@@ -46,15 +46,45 @@ const initialValues = {
 const validationSchema = yup.object().shape({
   username: yup
     .string()
-    .min(4, "Username must atleast contain 4 characters")
+    .min(1, "Username must contain atleast 1 character")
     .required("Username is required"),
   password: yup
     .string()
-    .min(4, "Password must atleast contain 4 characters")
+    .min(1, "Password must contain atleast 1 characters")
     .required("Password is required"),
+  passwordConfirmation: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Password must match")
+    .required("Password confirmation is required"),
 });
 
-export const SignInFormContainer = ({ onSubmit }) => {
+const SignUpForm = () => {
+  const navigate = useNavigate();
+
+  const [submitCreateUser] = useCreateUser();
+  const [signIn] = useSignIn();
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    try {
+      const { data } = await submitCreateUser({
+        username,
+        password,
+      });
+      console.log("submit create user data:", data);
+      try {
+        const { data } = await signIn({ username, password });
+        console.log("login data:", data);
+        navigate("/");
+      } catch (e) {
+        console.log("login error:", e);
+      }
+    } catch (e) {
+      console.log("submit create user error:", e);
+    }
+  };
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -62,12 +92,12 @@ export const SignInFormContainer = ({ onSubmit }) => {
     validateOnChange: true,
     validateOnBlur: true,
   });
+
   return (
     <View style={styles.signinContainer}>
       <View style={styles.inputItems}>
         <View style={styles.inputContainer}>
           <TextInput
-            testID="username"
             style={[
               styles.input,
               formik.touched.username &&
@@ -88,7 +118,6 @@ export const SignInFormContainer = ({ onSubmit }) => {
 
         <View style={styles.inputContainer}>
           <TextInput
-            testID="password"
             style={[
               styles.input,
               formik.touched.password &&
@@ -108,36 +137,34 @@ export const SignInFormContainer = ({ onSubmit }) => {
           )}
         </View>
 
-        <Pressable testID="submit" onPress={formik.handleSubmit}>
-          <Button title="Submit" />
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={[
+              styles.input,
+              formik.touched.passwordConfirmation &&
+                formik.errors.passwordConfirmation &&
+                styles.inputError,
+            ]}
+            secureTextEntry
+            placeholder="Password confirmation"
+            value={formik.values.passwordConfirmation}
+            onChangeText={formik.handleChange("passwordConfirmation")}
+            onBlur={formik.handleBlur("passwordConfirmation")}
+          />
+          {formik.touched.passwordConfirmation &&
+            formik.errors.passwordConfirmation && (
+              <Text style={styles.validationErrorText}>
+                {formik.errors.passwordConfirmation}
+              </Text>
+            )}
+        </View>
+
+        <Pressable onPress={formik.handleSubmit}>
+          <Button title="Sign up" />
         </Pressable>
       </View>
     </View>
   );
 };
 
-const SignInForm = ({ onSubmit }) => {
-  return <SignInFormContainer onSubmit={onSubmit} />;
-};
-
-const SignIn = () => {
-  const navigate = useNavigate();
-
-  const [signIn] = useSignIn();
-
-  const onSubmit = async (values) => {
-    const { username, password } = values;
-
-    try {
-      const { data } = await signIn({ username, password });
-      console.log("login data:", data);
-      navigate("/");
-    } catch (e) {
-      console.log("login error:", e);
-    }
-  };
-
-  return <SignInForm onSubmit={onSubmit} />;
-};
-
-export default SignIn;
+export default SignUpForm;

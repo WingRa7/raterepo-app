@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { TextInput, Pressable, View, StyleSheet } from "react-native";
 import { AutoGrowingTextInput } from "react-native-autogrow-textinput";
 import { useFormik } from "formik";
@@ -14,7 +13,7 @@ const styles = StyleSheet.create({
   signinContainer: {
     backgroundColor: theme.colors.cardBackground,
   },
-  signinItems: {
+  inputItems: {
     padding: 10,
     margin: 5,
   },
@@ -27,10 +26,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: theme.colors.border,
     padding: 10,
+    margin: 5,
     textAlignVertical: "top",
   },
   inputError: {
     borderColor: theme.colors.error,
+  },
+  validationErrorText: {
+    marginLeft: 10,
+    color: theme.colors.error,
   },
 });
 
@@ -85,11 +89,13 @@ const ReviewForm = () => {
     initialValues,
     validationSchema,
     onSubmit,
+    validateOnChange: true,
+    validateOnBlur: true,
   });
 
   return (
     <View style={styles.signinContainer}>
-      <View style={styles.signinItems}>
+      <View style={styles.inputItems}>
         <View style={styles.inputContainer}>
           <TextInput
             style={[
@@ -101,9 +107,10 @@ const ReviewForm = () => {
             placeholder="Repository owner name"
             value={formik.values.repoOwner}
             onChangeText={formik.handleChange("repoOwner")}
+            onBlur={formik.handleBlur("repoOwner")}
           />
           {formik.touched.repoOwner && formik.errors.repoOwner && (
-            <Text style={{ color: theme.colors.error }}>
+            <Text style={styles.validationErrorText}>
               {formik.errors.repoOwner}
             </Text>
           )}
@@ -120,9 +127,10 @@ const ReviewForm = () => {
             placeholder="Repository Name"
             value={formik.values.repoName}
             onChangeText={formik.handleChange("repoName")}
+            onBlur={formik.handleBlur("repoName")}
           />
           {formik.touched.repoName && formik.errors.repoName && (
-            <Text style={{ color: theme.colors.error }}>
+            <Text style={styles.validationErrorText}>
               {formik.errors.repoName}
             </Text>
           )}
@@ -139,9 +147,10 @@ const ReviewForm = () => {
             placeholder="Rating between 0 and 100"
             value={formik.values.rating}
             onChangeText={formik.handleChange("rating")}
+            onBlur={formik.handleBlur("rating")}
           />
           {formik.touched.rating && formik.errors.rating && (
-            <Text style={{ color: theme.colors.error }}>
+            <Text style={styles.validationErrorText}>
               {formik.errors.rating}
             </Text>
           )}
@@ -158,9 +167,10 @@ const ReviewForm = () => {
             placeholder={"Review"}
             value={formik.values.review}
             onChangeText={formik.handleChange("review")}
+            onBlur={formik.handleBlur("review")}
           />
           {formik.touched.review && formik.errors.review && (
-            <Text style={{ color: theme.colors.error }}>
+            <Text style={styles.validationErrorText}>
               {formik.errors.review}
             </Text>
           )}
