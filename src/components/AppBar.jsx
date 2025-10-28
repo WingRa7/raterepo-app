@@ -1,5 +1,5 @@
 import { View, StyleSheet, ScrollView, Pressable } from "react-native";
-import { Link } from "react-router-native";
+import { Link, useNavigate } from "react-router-native";
 import Constants from "expo-constants";
 
 import theme from "../theme";
@@ -27,10 +27,12 @@ const AppBar = () => {
   const { data, error, loading } = useQuery(GET_CURRENT_USER);
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
+  const navigate = useNavigate();
 
   const handleSignOut = async () => {
     await authStorage.removeAccessToken();
     await apolloClient.resetStore();
+    navigate("/");
   };
 
   if (loading) {
@@ -56,6 +58,11 @@ const AppBar = () => {
         {!data.me && data && (
           <Link to="/signup">
             <AppBarTab title={"Sign Up"} />
+          </Link>
+        )}
+        {data.me && data && (
+          <Link to="/reviews">
+            <AppBarTab title={"My Reviews"} />
           </Link>
         )}
         {data.me && data && (

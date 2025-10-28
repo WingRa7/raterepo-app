@@ -88,7 +88,7 @@ const SortPicker = ({ sort, setSort }) => (
   </>
 );
 
-const SearchBar = ({ filter, setFilter, filterDebounce }) => {
+const SearchBar = ({ setFilter }) => {
   return (
     <View style={styles.container}>
       <TextInput
@@ -104,9 +104,7 @@ export const RepositoryListContainer = ({
   repositories,
   sort,
   setSort,
-  filter,
   setFilter,
-  filterDebounce,
 }) => {
   const navigate = useNavigate();
 
@@ -120,11 +118,7 @@ export const RepositoryListContainer = ({
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={
         <>
-          <SearchBar
-            filter={filter}
-            setFilter={setFilter}
-            filterDebounce={filterDebounce}
-          />
+          <SearchBar setFilter={setFilter} />
           <SortPicker sort={sort} setSort={setSort} />
         </>
       }
@@ -162,9 +156,7 @@ const RepositoryList = () => {
       repositories={repositories}
       sort={sort}
       setSort={setSort}
-      filter={filter}
       setFilter={setFilter}
-      filterDebounce={filterDebounce}
     />
   );
 };

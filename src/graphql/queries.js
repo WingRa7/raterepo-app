@@ -14,10 +14,24 @@ export const GET_USERS = gql`
 `;
 
 export const GET_CURRENT_USER = gql`
-  query me {
+  query me($withReviews: Boolean = false) {
     me {
       id
       username
+      reviews @include(if: $withReviews) {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            user {
+              id
+              username
+            }
+          }
+        }
+      }
     }
   }
 `;
