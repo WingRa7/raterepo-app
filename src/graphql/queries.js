@@ -24,10 +24,15 @@ export const GET_CURRENT_USER = gql`
 
 export const GET_REPOSITORIES = gql`
   query GetRepos(
+    $searchKeyword: String
     $orderDirection: OrderDirection
     $orderBy: AllRepositoriesOrderBy
   ) {
-    repositories(orderDirection: $orderDirection, orderBy: $orderBy) {
+    repositories(
+      searchKeyword: $searchKeyword
+      orderDirection: $orderDirection
+      orderBy: $orderBy
+    ) {
       edges {
         node {
           ...RepoInfo

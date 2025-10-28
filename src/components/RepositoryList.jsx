@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FlatList, View, StyleSheet, Pressable } from "react-native";
+import { FlatList, View, StyleSheet, Pressable, TextInput } from "react-native";
 import { useNavigate } from "react-router-native";
 import useRepositories from "../hooks/useRepositories";
 import RepositoryItem from "./RepositoryItem";
@@ -7,13 +7,23 @@ import { formatNumber } from "../utils/utils";
 import RNPickerSelect from "react-native-picker-select";
 import theme from "../theme";
 import { Chevron } from "react-native-shapes";
+import { useDebounce } from "use-debounce";
 
 const styles = StyleSheet.create({
   separator: {
     height: 10,
   },
-  pickerContainer: {
+  container: {
     backgroundColor: theme.colors.cardBackground,
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: theme.colors.border,
+    padding: 10,
+    marginHorizontal: 15,
+    marginTop: 15,
+    textAlignVertical: "top",
   },
 });
 
@@ -42,15 +52,15 @@ const pickerStyles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const FilterPicker = ({ filter, setFilter }) => (
+const SortPicker = ({ sort, setSort }) => (
   <>
-    <View style={styles.pickerContainer}>
+    <View style={styles.container}>
       <RNPickerSelect
         placeholder={{}}
         Icon={() => {
           return <Chevron size={1.5} color="black" />;
         }}
-        onValueChange={(filter) => setFilter(filter)}
+        onValueChange={(sort) => setSort(sort)}
         items={[
           {
             label: "Latest repositories",
@@ -78,10 +88,25 @@ const FilterPicker = ({ filter, setFilter }) => (
   </>
 );
 
+const SearchBar = ({ filter, setFilter, filterDebounce }) => {
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Search repository..."
+        onChangeText={(filter) => setFilter(filter)}
+      />
+    </View>
+  );
+};
+
 export const RepositoryListContainer = ({
   repositories,
+  sort,
+  setSort,
   filter,
   setFilter,
+  filterDebounce,
 }) => {
   const navigate = useNavigate();
 
@@ -94,7 +119,14 @@ export const RepositoryListContainer = ({
       data={repositoryNodes}
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={
-        <FilterPicker filter={filter} setFilter={setFilter} />
+        <>
+          <SearchBar
+            filter={filter}
+            setFilter={setFilter}
+            filterDebounce={filterDebounce}
+          />
+          <SortPicker sort={sort} setSort={setSort} />
+        </>
       }
       renderItem={({ item }) => (
         <Pressable onPress={() => navigate(`/${item.id}`)}>
@@ -115,20 +147,24 @@ export const RepositoryListContainer = ({
 };
 
 const RepositoryList = () => {
-  const [filter, setFilter] = useState({
+  const [sort, setSort] = useState({
     orderBy: "CREATED_AT",
     orderDirection: "DESC",
   });
-  const { repositories } = useRepositories(filter);
+  const [filter, setFilter] = useState("");
+  const [filterDebounce] = useDebounce(filter, 500);
 
-  // orderBy: CREATED_AT or RATING_AVERAGE
-  // orderDirection: ASC or DESC
+  const queryVariables = { sort, filterDebounce };
+  const { repositories } = useRepositories(queryVariables);
 
   return (
     <RepositoryListContainer
       repositories={repositories}
+      sort={sort}
+      setSort={setSort}
       filter={filter}
       setFilter={setFilter}
+      filterDebounce={filterDebounce}
     />
   );
 };
