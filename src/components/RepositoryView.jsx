@@ -67,7 +67,19 @@ const styles = StyleSheet.create({
 
 const RepositoryView = () => {
   const { id } = useParams();
-  const { repository, loading, error } = useRepository(id);
+  const itemsPerPage = 8;
+
+  const queryVariables = {
+    id: id,
+    first: itemsPerPage,
+  };
+
+  const { repository, loading, error, fetchMore } =
+    useRepository(queryVariables);
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   if (loading) {
     return (
@@ -159,6 +171,8 @@ const RepositoryView = () => {
       data={reviewNodes}
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={RepoInfo}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       renderItem={({ item }) => (
         <View style={styles.repoContainer}>
           <View style={styles.infoContainer}>

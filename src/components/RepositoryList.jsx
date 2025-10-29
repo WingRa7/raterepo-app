@@ -105,6 +105,7 @@ export const RepositoryListContainer = ({
   sort,
   setSort,
   setFilter,
+  onEndReach,
 }) => {
   const navigate = useNavigate();
 
@@ -122,6 +123,8 @@ export const RepositoryListContainer = ({
           <SortPicker sort={sort} setSort={setSort} />
         </>
       }
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       renderItem={({ item }) => (
         <Pressable onPress={() => navigate(`/${item.id}`)}>
           <RepositoryItem
@@ -148,8 +151,18 @@ const RepositoryList = () => {
   const [filter, setFilter] = useState("");
   const [filterDebounce] = useDebounce(filter, 500);
 
-  const queryVariables = { sort, filterDebounce };
-  const { repositories } = useRepositories(queryVariables);
+  const itemsPerPage = 8;
+
+  const queryVariables = {
+    sort: sort,
+    filterDebounce: filterDebounce,
+    first: itemsPerPage,
+  };
+  const { repositories, fetchMore } = useRepositories(queryVariables);
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   return (
     <RepositoryListContainer
@@ -157,6 +170,7 @@ const RepositoryList = () => {
       sort={sort}
       setSort={setSort}
       setFilter={setFilter}
+      onEndReach={onEndReach}
     />
   );
 };

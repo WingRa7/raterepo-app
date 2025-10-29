@@ -78,7 +78,6 @@ const ReviewForm = () => {
         rating,
         review,
       });
-      console.log("submit review data:", data);
       navigate(`/${data.createReview.repositoryId}`);
     } catch (e) {
       console.log("submit review error:", e);

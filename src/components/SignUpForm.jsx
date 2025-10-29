@@ -72,10 +72,8 @@ const SignUpForm = () => {
         username,
         password,
       });
-      console.log("submit create user data:", data);
       try {
         const { data } = await signIn({ username, password });
-        console.log("login data:", data);
         navigate("/");
       } catch (e) {
         console.log("login error:", e);
